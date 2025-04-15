@@ -198,7 +198,7 @@ class DownloadTaskWorker(applicationContext: Context, workerParams: WorkerParame
                     // other URL scheme will be attempted to resolve using content resolver
                     val resolver = applicationContext.contentResolver
                     // create destination Uri if not already exists
-                    var documentFile = DocumentFile.fromTreeUri(applicationContext, directoryUri)
+                    val documentFile = DocumentFile.fromTreeUri(applicationContext, directoryUri)
                     destUri = destUri ?: documentFile?.createFile(task.mimeType, uriFilename)?.uri
                     if (destUri == null) {
                         val message =

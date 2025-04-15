@@ -146,125 +146,128 @@ class _MyAppState extends State<MyApp> {
           appBar: AppBar(
             title: const Text('background_downloader example app'),
           ),
-          body: Center(
-              child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    children: [
-                      Text('RequireWiFi setting',
-                          style: Theme.of(context).textTheme.titleLarge),
-                      const RequireWiFiChoice(),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Row(
-                    children: [
-                      Expanded(
-                          child: Text('Force error',
-                              style: Theme.of(context).textTheme.titleLarge)),
-                      Switch(
-                          value: downloadWithError,
-                          onChanged: (value) {
-                            setState(() {
-                              downloadWithError = value;
-                            });
-                          })
-                    ],
-                  ),
-                ),
-                Center(
-                    child: ElevatedButton(
-                  onPressed: processButtonPress,
-                  child: Text(
-                    buttonTexts[buttonState.index],
-                  ),
-                )),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Row(
-                    children: [
-                      const Expanded(child: Text('File download status:')),
-                      Text('${downloadTaskStatus ?? "undefined"}')
-                    ],
-                  ),
-                ),
-                const Divider(
-                  height: 30,
-                  thickness: 5,
-                  color: Colors.blueGrey,
-                ),
-                Center(
-                    child: ElevatedButton(
-                        onPressed:
-                            loadAndOpenInProgress ? null : processLoadAndOpen,
-                        child: Text(
-                          Platform.isIOS
-                              ? 'Load, open and add'
-                              : Platform.isAndroid
-                                  ? 'Load, open and move'
-                                  : 'Load & Open',
-                        ))),
-                Center(
-                    child: Text(
-                  loadAndOpenInProgress ? 'Busy' : '',
-                )),
-                const Divider(
-                  height: 30,
-                  thickness: 5,
-                  color: Colors.blueGrey,
-                ),
-                Center(
-                    child: ElevatedButton(
-                        onPressed:
-                            loadABunchInProgress ? null : processLoadABunch,
-                        child: const Text('Load a bunch'))),
-                Center(child: Text(loadABunchInProgress ? 'Enqueueing' : '')),
-                const Divider(
-                  height: 30,
-                  thickness: 5,
-                  color: Colors.blueGrey,
-                ),
-                Center(
-                  child: ElevatedButton(
-                    onPressed:
-                        loadBackgroundInProgress ? null : processLoadBackground,
-                    child: const Text(
-                      'Load in background',
+          body: SingleChildScrollView(
+            child: Center(
+                child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      children: [
+                        Text('RequireWiFi setting',
+                            style: Theme.of(context).textTheme.titleLarge),
+                        const RequireWiFiChoice(),
+                      ],
                     ),
                   ),
-                ),
-                Center(
-                  child: Text(
-                    loadBackgroundInProgress
-                        ? 'Working...'
-                        : loadBackgroundResult ?? '',
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Row(
+                      children: [
+                        Expanded(
+                            child: Text('Force error',
+                                style: Theme.of(context).textTheme.titleLarge)),
+                        Switch(
+                            value: downloadWithError,
+                            onChanged: (value) {
+                              setState(() {
+                                downloadWithError = value;
+                              });
+                            })
+                      ],
+                    ),
                   ),
-                ),
-                if (onMobile)
+                  Center(
+                      child: ElevatedButton(
+                    onPressed: processButtonPress,
+                    child: Text(
+                      buttonTexts[buttonState.index],
+                    ),
+                  )),
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Row(
+                      children: [
+                        const Expanded(child: Text('File download status:')),
+                        Text('${downloadTaskStatus ?? "undefined"}')
+                      ],
+                    ),
+                  ),
                   const Divider(
                     height: 30,
                     thickness: 5,
                     color: Colors.blueGrey,
                   ),
-                if (onMobile)
+                  Center(
+                      child: ElevatedButton(
+                          onPressed:
+                              loadAndOpenInProgress ? null : processLoadAndOpen,
+                          child: Text(
+                            Platform.isIOS
+                                ? 'Load, open and add'
+                                : Platform.isAndroid
+                                    ? 'Load, open and move'
+                                    : 'Load & Open',
+                          ))),
+                  Center(
+                      child: Text(
+                    loadAndOpenInProgress ? 'Busy' : '',
+                  )),
+                  const Divider(
+                    height: 30,
+                    thickness: 5,
+                    color: Colors.blueGrey,
+                  ),
+                  Center(
+                      child: ElevatedButton(
+                          onPressed:
+                              loadABunchInProgress ? null : processLoadABunch,
+                          child: const Text('Load a bunch'))),
+                  Center(child: Text(loadABunchInProgress ? 'Enqueueing' : '')),
+                  const Divider(
+                    height: 30,
+                    thickness: 5,
+                    color: Colors.blueGrey,
+                  ),
                   Center(
                     child: ElevatedButton(
-                      onPressed: processPickDirectory,
+                      onPressed: loadBackgroundInProgress
+                          ? null
+                          : processLoadBackground,
                       child: const Text(
-                        'Pick destination',
+                        'Load in background',
                       ),
                     ),
                   ),
-              ],
-            ),
-          )),
+                  Center(
+                    child: Text(
+                      loadBackgroundInProgress
+                          ? 'Working...'
+                          : loadBackgroundResult ?? '',
+                    ),
+                  ),
+                  if (onMobile)
+                    const Divider(
+                      height: 30,
+                      thickness: 5,
+                      color: Colors.blueGrey,
+                    ),
+                  if (onMobile)
+                    Center(
+                      child: ElevatedButton(
+                        onPressed: processPickDirectory,
+                        child: const Text(
+                          'Pick destination',
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            )),
+          ),
           bottomSheet: DownloadProgressIndicator(progressUpdateStream.stream,
               showPauseButton: true,
               showCancelButton: true,

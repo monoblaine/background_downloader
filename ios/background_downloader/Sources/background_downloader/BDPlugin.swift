@@ -716,6 +716,21 @@ public class BDPlugin: NSObject, FlutterPlugin, UNUserNotificationCenterDelegate
             else {
                 return
             }
+            // For some reason, the value of task.filename here has some doubly-encoded
+            // weird shit if we're using a UriDownloadTask. So we're using the value of
+            // task.directory and concatenating it with the encoded file name instead.
+            let unpacked = unpack(packedString: task.filename)
+            if unpacked.filename != nil && task.directory != "" {
+                let fileName = unpacked.filename!
+                let fileNameEncoded = fileName.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)!
+                let pathToFile = task.directory.hasSuffix("/")
+                    ? "\(task.directory)\(fileNameEncoded)"
+                    : "\(task.directory)/\(fileNameEncoded)"
+                let fileUri = URL(string: pathToFile)!
+                let mimeType = getMimeType(fromFilename: fileUri.path)
+                success = doOpenFile(filePath: "", mimeType: mimeType, alreadyParsedUri: fileUri)
+                return
+            }
             filePath = getFilePath(for: task)
         }
         if !FileManager.default.fileExists(atPath: filePath!) {
@@ -962,7 +977,12 @@ public class BDPlugin: NSObject, FlutterPlugin, UNUserNotificationCenterDelegate
                         return
                     }
                     if notificationConfig.tapOpensFile {
-                        if !doOpenFile(filePath: filePath, mimeType: nil)
+                        // Contrary to methodOpenFile, task.filename here is a proper URI
+                        // if we're using a UriDownloadTask. Hence we can directly use it.
+                        let unpacked = unpack(packedString: task.filename)
+                        let fileUri = unpacked.uri
+                        let mimeType = fileUri != nil ? getMimeType(fromFilename: fileUri!.path) : nil
+                        if !doOpenFile(filePath: unpacked.filename ?? filePath, mimeType: mimeType, alreadyParsedUri: fileUri)
                         {
                             os_log("Failed to open file on notification tap", log: log, type: .info)
                         }

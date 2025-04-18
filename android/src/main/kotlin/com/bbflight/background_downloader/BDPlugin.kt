@@ -952,9 +952,10 @@ class BDPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         val taskJsonMapString = args[0] as String?
         val task =
             if (taskJsonMapString != null) Json.decodeFromString<Task>(taskJsonMapString) else null
+        val fileUri = if (task != null) UriUtils.unpack(task.filename).second else null
         val filePath = args[1] as String? ?: task!!.filePath(applicationContext)
-        val mimeType = args[2] as String? ?: getMimeType(filePath)
-        result.success(if (activity != null) doOpenFile(activity!!, filePath, mimeType) else false)
+        val mimeType = args[2] as String? ?: getMimeType(fileUri?.lastPathSegment ?: filePath)
+        result.success(if (activity != null) doOpenFile(activity!!, filePath, mimeType, fileUri) else false)
     }
 
     /**
@@ -1323,8 +1324,10 @@ class BDPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
                         )
                         else null
                     if (notificationConfig?.tapOpensFile == true && activity != null) {
+                        val fileUri = UriUtils.unpack(task.filename).second
                         val filePath = task.filePath(activity!!)
-                        doOpenFile(activity!!, filePath, getMimeType(filePath))
+                        val mimeType = getMimeType(fileUri?.lastPathSegment ?: filePath)
+                        doOpenFile(activity!!, filePath, mimeType, fileUri)
                     }
                 }
             }

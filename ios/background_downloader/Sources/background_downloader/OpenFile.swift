@@ -10,8 +10,8 @@ import MobileCoreServices
 import UIKit
 
 ///
-func doOpenFile(filePath: String, mimeType: String?) -> Bool {
-    let fileUrl = URL(string: "file:///\(filePath)")!
+func doOpenFile(filePath: String, mimeType: String?, alreadyParsedUri: URL? = nil) -> Bool {
+    let fileUrl = alreadyParsedUri ?? URL(string: "file:///\(filePath)")!
     let documentInteractionController = UIDocumentInteractionController(url: fileUrl)
     let delegate = DocumentInteractionControllerDelegate()
     documentInteractionController.delegate = delegate

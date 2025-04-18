@@ -1323,8 +1323,10 @@ class BDPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
                         )
                         else null
                     if (notificationConfig?.tapOpensFile == true && activity != null) {
+                        val fileUri = UriUtils.unpack(task.filename).second
                         val filePath = task.filePath(activity!!)
-                        doOpenFile(activity!!, filePath, getMimeType(filePath))
+                        val mimeType = getMimeType(fileUri?.lastPathSegment ?: filePath)
+                        doOpenFile(activity!!, filePath, mimeType, fileUri)
                     }
                 }
             }

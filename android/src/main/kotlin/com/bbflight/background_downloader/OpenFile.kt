@@ -14,8 +14,8 @@ class OpenFileProvider : FileProvider(R.xml.bgd_file_paths)
 /**
  * Opens the file at the given path or URI in the default file manager app.
  */
-fun doOpenFile(activity: Activity, filePathOrUriString: String, mimeType: String): Boolean {
-    val uri = Uri.parse(filePathOrUriString)
+fun doOpenFile(activity: Activity, filePathOrUriString: String, mimeType: String, alreadyParsedUri: Uri? = null): Boolean {
+    val uri = alreadyParsedUri ?: Uri.parse(filePathOrUriString)
     val intent = Intent(Intent.ACTION_VIEW)
     try {
         val contentUri =

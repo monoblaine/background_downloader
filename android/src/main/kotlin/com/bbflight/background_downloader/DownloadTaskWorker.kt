@@ -172,6 +172,8 @@ class DownloadTaskWorker(applicationContext: Context, workerParams: WorkerParame
                     ExceptionType.fileSystem,
                     description = "Insufficient space to store the file to be downloaded"
                 )
+                connection.disconnect()
+                cleanup(usesUri, destUri)
                 return TaskStatus.failed
             }
             val outputStream = if (tempFile != null) {

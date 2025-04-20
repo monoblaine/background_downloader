@@ -158,22 +158,21 @@ class DownloadTaskWorker(applicationContext: Context, workerParams: WorkerParame
                 }
                 tempFilePath =
                     tempFilePath.ifEmpty { "${tempDir.absolutePath}/com.bbflight.background_downloader${Random.nextInt()}" }
-
-                // confirm enough storage space for download
-                if (insufficientSpace(applicationContext, contentLength)) {
-                    Log.i(
-                        TAG,
-                        "Insufficient space to store the file to be downloaded for taskId ${task.taskId}"
-                    )
-                    taskException = TaskException(
-                        ExceptionType.fileSystem,
-                        description = "Insufficient space to store the file to be downloaded"
-                    )
-                    return TaskStatus.failed
-                }
                 File(tempFilePath)
             } else {
                 null
+            }
+            // confirm enough storage space for download
+            if (insufficientSpace(applicationContext, contentLength)) {
+                Log.i(
+                    TAG,
+                    "Insufficient space to store the file to be downloaded for taskId ${task.taskId}"
+                )
+                taskException = TaskException(
+                    ExceptionType.fileSystem,
+                    description = "Insufficient space to store the file to be downloaded"
+                )
+                return TaskStatus.failed
             }
             val outputStream = if (tempFile != null) {
                 FileOutputStream(tempFile, isResume)
